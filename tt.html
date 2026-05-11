@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info</title>
+
+    <style>
+        /* CSS Section */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #1e3c72, #2a5298, #000);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Animated Background Bubbles */
+        .bg-animate {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            perspective: 1000px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            width: 380px;
+            border-radius: 25px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) rotateX(10deg);
+            border-color: #00d2ff;
+            box-shadow: 0 35px 60px rgba(0, 210, 255, 0.2);
+        }
+
+        .icon-box {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px #00d2ff);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #00d2ff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        /* Read More Section */
+        #more-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.4s ease;
+            opacity: 0;
+            text-align: left;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+
+        #more-content.show {
+            max-height: 300px;
+            opacity: 1;
+            padding-top: 15px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+
+        ul li::before {
+            content: '✦';
+            color: #00d2ff;
+            margin-right: 10px;
+        }
+
+        button {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.5);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-animate"></div>
+
+    <div class="container">
+        <div class="card">
+            <div class="icon-box">🩺</div>
+            <h2>Harsh Hospital</h2>
+            <p>Future-ready general surgery focusing on <b>Minimal Invasive</b> techniques for rapid healing.</p>
+
+            <div id="more-content">
+                <ul>
+                    <li>Cardiology<strong></li></strong>
+                    <li>Gastroenterology<strong></strong></li>
+                    <li>Critical Care<strong></strong></li>
+                    <li>OPD<strong></strong></li>
+                </ul>
+            </div>
+
+            <button id="toggle-btn">Read More</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Section
+        const btn = document.getElementById('toggle-btn');
+        const content = document.getElementById('more-content');
+
+        btn.addEventListener('click', () => {
+            content.classList.toggle('show');
+
+            if (content.classList.contains('show')) {
+                btn.textContent = 'Show Less';
+            } else {
+                btn.textContent = 'Read More';
+            }
+        });
+
+        // Simple mouse follow effect for the card
+        const card = document.querySelector('.card');
+        document.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Reset position when mouse leaves
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+    </script>
+</body>
+
+</html>

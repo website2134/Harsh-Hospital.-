@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* ===== Live Time & Hospital Status ===== */
+.hospital-status-section{
+    padding:80px 8%;
+    background:linear-gradient(135deg,#eef7ff,#ffffff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.status-box{
+    width:100%;
+    max-width:650px;
+    background:#fff;
+    padding:50px 30px;
+    text-align:center;
+    border-radius:25px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.08);
+    animation:fadeUp 1s ease;
+}
+
+.status-box h2{
+    font-size:38px;
+    color:#0d6efd;
+    margin-bottom:25px;
+}
+
+.live-time{
+    font-size:48px;
+    font-weight:bold;
+    color:#111;
+    margin-bottom:10px;
+    letter-spacing:2px;
+}
+
+.day-name{
+    font-size:22px;
+    color:#666;
+    margin-bottom:25px;
+}
+
+.open-status{
+    display:inline-block;
+    padding:14px 28px;
+    border-radius:40px;
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:20px;
+    animation:pulse 1.5s infinite;
+}
+
+.open{
+    background:#d4ffe0;
+    color:#0a8a3a;
+}
+
+.closed{
+    background:#ffe0e0;
+    color:#d40000;
+}
+
+.status-note{
+    font-size:17px;
+    color:#555;
+    line-height:1.8;
+}
+
+/* Animation */
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
+}
+
+/* Mobile */
+@media(max-width:768px){
+
+.status-box{
+    padding:35px 20px;
+}
+
+.status-box h2{
+    font-size:28px;
+}
+
+.live-time{
+    font-size:34px;
+}
+
+.day-name{
+    font-size:18px;
+}
+
+.open-status{
+    font-size:16px;
+    padding:12px 20px;
+}
+
+.status-note{
+    font-size:15px;
+}
+
+}
+    </style>
+</head>
+<body>
+    <!-- ===== Live Time & Hospital Status Start ===== -->
+<section class="hospital-status-section">
+
+    <div class="status-box">
+
+        <h2>Hospital Live Status</h2>
+
+        <div class="live-time" id="liveTime">
+            00:00:00
+        </div>
+
+        <div class="day-name" id="dayName">
+            Monday
+        </div>
+
+        <div class="open-status" id="hospitalStatus">
+            Checking...
+        </div>
+
+        <p class="status-note">
+            OPD Timing: 9:00 AM to 8:00 PM <br>
+            Emergency Service: 24x7 Available
+        </p>
+
+    </div>
+
+</section>
+<!-- ===== Live Time & Hospital Status End ===== -->
+
+<script>
+function updateHospitalTime(){
+
+    let now = new Date();
+
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+
+    let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    let day = days[now.getDay()];
+
+    let ampm = hours >= 12 ? "PM" : "AM";
+    let displayHour = hours % 12;
+    displayHour = displayHour ? displayHour : 12;
+
+    displayHour = displayHour.toString().padStart(2,"0");
+    minutes = minutes.toString().padStart(2,"0");
+    seconds = seconds.toString().padStart(2,"0");
+
+    document.getElementById("liveTime").innerHTML =
+    displayHour + ":" + minutes + ":" + seconds + " " + ampm;
+
+    document.getElementById("dayName").innerHTML = day;
+
+    let status = document.getElementById("hospitalStatus");
+
+    if(hours >= 9 && hours < 20){
+        status.innerHTML = "🟢 Hospital Open Now";
+        status.className = "open-status open";
+    }else{
+        status.innerHTML = "🔴 OPD Closed Now";
+        status.className = "open-status closed";
+    }
+
+}
+
+setInterval(updateHospitalTime,1000);
+updateHospitalTime();
+</script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Assistant</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #eaf4ff, #ffffff);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Main Box */
+        .chatbot {
+            width: 100%;
+            max-width: 430px;
+            height: 720px;
+            background: #fff;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .15);
+            display: flex;
+            flex-direction: column;
+            animation: zoom .8s ease;
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, #0d6efd, #47a6ff);
+            color: #fff;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bot-icon {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            color: #0d6efd;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            animation: spin 5s linear infinite;
+        }
+
+        .chat-header h2 {
+            font-size: 22px;
+        }
+
+        .chat-header p {
+            font-size: 12px;
+            opacity: .9;
+        }
+
+        .lang-btn {
+            border: none;
+            background: #fff;
+            color: #0d6efd;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Chat Body */
+        .chat-body {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+            background: #f8fbff;
+            scroll-behavior: smooth;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 12px 15px;
+            margin-bottom: 14px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.4;
+            animation: fade .5s ease;
+        }
+
+        .bot {
+            background: #e8f2ff;
+            color: #222;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user {
+            background: #0d6efd;
+            color: #fff;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* Questions */
+        .quick-questions {
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            overflow-y: auto;
+            max-height: 230px;
+        }
+
+        .quick-btn {
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            background: #eef5ff;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .3s;
+        }
+
+        .quick-btn:hover {
+            background: #0d6efd;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        .chat-footer {
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            background: #fff;
+        }
+
+        /* Animation */
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoom {
+            from {
+                opacity: 0;
+                transform: scale(.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Mobile */
+        @media(max-width:500px) {
+            .chatbot {
+                height: 100vh;
+                max-width: 100%;
+                border-radius: 0;
+            }
+
+            .quick-questions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* CSS ME YE ADD KARO */
+
+        body.dark {
+            background: linear-gradient(135deg, #111, #1e1e1e);
+        }
+
+        body.dark .chatbot {
+            background: #1c1c1c;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
+        }
+
+        body.dark .chat-body {
+            background: #111;
+        }
+
+        body.dark .quick-questions {
+            background: #1c1c1c;
+            border-top: 1px solid #333;
+        }
+
+        body.dark .chat-footer {
+            background: #1c1c1c;
+            color: #aaa;
+        }
+
+        body.dark .bot {
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        body.dark .quick-btn {
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        body.dark .quick-btn:hover {
+            background: #0d6efd;
+        }
+
+        body.dark .lang-btn {
+            background: #2a2a2a;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chatbot">
+
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="left">
+                <div class="bot-icon">Chat Bot</div>
+                <div>
+                    <h2 id="title">Hospital Chat Bot</h2>
+                    <p id="status">Online • Instant Help</p>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:8px;">
+                <button class="lang-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+                <button class="lang-btn" onclick="toggleLang()" id="langBtn">हिंदी</button>
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-body" id="chatBody">
+            <div class="msg bot">
+                Hello 👋 Welcome to Harsh Hospital. How may I help you today?
+            </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="quick-questions" id="questionBox"></div>
+
+        <!-- Footer -->
+        <div class="chat-footer">
+            Powered by Harsh Hospital Smart AI
+        </div>
+
+    </div>
+
+    <script>
+        let hindi = false;
+
+        const englishQuestions = [
+            "Doctor Available?",
+            "Book Appointment",
+            "Emergency Number",
+            "OPD Timing",
+            "Cardiology Dept",
+            "Child Specialist",
+            "X-Ray Available?",
+            "MRI Scan",
+            "ICU Beds",
+            "Cashless Insurance",
+            "Pathology Test",
+            "24x7 Ambulance",
+            "Dentist",
+            "Location",
+            "Contact Number"
+        ];
+
+        const hindiQuestions = [
+            "डॉक्टर उपलब्ध हैं?",
+            "अपॉइंटमेंट बुक करें",
+            "इमरजेंसी नंबर",
+            "ओपीडी टाइम",
+            "कार्डियोलॉजी विभाग",
+            "बाल रोग विशेषज्ञ",
+            "एक्स-रे उपलब्ध है?",
+            "MRI स्कैन",
+            "ICU बेड",
+            "कैशलेस सुविधा",
+            "पैथोलॉजी टेस्ट",
+            "24x7 एम्बुलेंस",
+            "डेंटिस्ट",
+            "लोकेशन",
+            "संपर्क नंबर"
+        ];
+
+        loadQuestions();
+
+        /* Toggle Language */
+        function toggleLang() {
+
+            hindi = !hindi;
+            chatBody.innerHTML = "";
+
+            if (hindi) {
+                document.getElementById("title").innerText = "हॉस्पिटल AI बॉट";
+                document.getElementById("status").innerText = "ऑनलाइन • तुरंत सहायता";
+                document.getElementById("langBtn").innerText = "English";
+
+                addBot("नमस्ते 👋 हर्ष हॉस्पिटल में आपका स्वागत है। मैं आपकी कैसे मदद कर सकता हूँ?");
+            } else {
+                document.getElementById("title").innerText = "Hospital AI Bot";
+                document.getElementById("status").innerText = "Online • Instant Help";
+                document.getElementById("langBtn").innerText = "हिंदी";
+
+                addBot("Hello 👋 Welcome to Harsh Hospital. How may I help you today?");
+            }
+
+            loadQuestions();
+        }
+
+        /* Load Questions */
+        function loadQuestions() {
+
+            let box = document.getElementById("questionBox");
+            box.innerHTML = "";
+
+            let arr = hindi ? hindiQuestions : englishQuestions;
+
+            arr.forEach(q => {
+                box.innerHTML += `<button class="quick-btn" onclick="reply('${q}')">${q}</button>`;
+            });
+        }
+
+        /* Reply */
+        function reply(question) {
+
+            addUser(question);
+
+            setTimeout(() => {
+
+                let ans = "Please contact reception.";
+
+                if (!hindi) {
+
+                    if (question == "Doctor Available?") ans = "Yes ✅ 10+ doctors available today.";
+                    if (question == "Book Appointment") ans = "Call +91 9431046932 to book.";
+                    if (question == "Emergency Number") ans = "🚑 +91 9431046932";
+                    if (question == "OPD Timing") ans = "OPD Timing: 9 AM to 8 PM.";
+                    if (question == "Cardiology Dept") ans = "Heart specialist available Mon-Sat.";
+                    if (question == "Child Specialist") ans = "Pediatric doctor available daily.";
+                    if (question == "X-Ray Available?") ans = "Yes 24x7 digital X-Ray available.";
+                    if (question == "MRI Scan") ans = "MRI available from 8 AM to 10 PM.";
+                    if (question == "ICU Beds") ans = "Currently 3 ICU beds available.";
+                    if (question == "Cashless Insurance") ans = "Yes 💳 Available.";
+                    if (question == "Pathology Test") ans = "All blood and lab tests available.";
+                    if (question == "24x7 Ambulance") ans = "🚑 Ambulance available 24x7.";
+                    if (question == "Dentist") ans = "Dental specialist available daily.";
+                    if (question == "Location") ans = "Harsh Hospital, Main Road City Center.";
+                    if (question == "Contact Number") ans = "📞 +91 9431046932";
+
+                } else {
+
+                    if (question == "डॉक्टर उपलब्ध हैं?") ans = "हाँ ✅ आज 10+ डॉक्टर उपलब्ध हैं।";
+                    if (question == "अपॉइंटमेंट बुक करें") ans = "बुकिंग हेतु कॉल करें +91 9431046932";
+                    if (question == "इमरजेंसी नंबर") ans = "🚑 +91 9431046932 ";
+                    if (question == "ओपीडी टाइम") ans = "ओपीडी समय: सुबह 9 बजे से रात 8 बजे तक।";
+                    if (question == "कार्डियोलॉजी विभाग") ans = "हार्ट विशेषज्ञ सोमवार से शनिवार उपलब्ध हैं।";
+                    if (question == "बाल रोग विशेषज्ञ") ans = "बाल रोग विशेषज्ञ रोज उपलब्ध हैं।";
+                    if (question == "एक्स-रे उपलब्ध है?") ans = "हाँ 24x7 डिजिटल एक्स-रे उपलब्ध है।";
+                    if (question == "MRI स्कैन") ans = "MRI सुबह 8 बजे से रात 10 बजे तक उपलब्ध है।";
+                    if (question == "ICU बेड") ans = "अभी 3 ICU बेड खाली हैं।";
+                    if (question == "कैशलेस सुविधा") ans = "हाँ 💳 सुविधा उपलब्ध है।";
+                    if (question == "पैथोलॉजी टेस्ट") ans = "सभी ब्लड व लैब टेस्ट उपलब्ध हैं।";
+                    if (question == "24x7 एम्बुलेंस") ans = "🚑 एम्बुलेंस 24x7 उपलब्ध है।";
+                    if (question == "डेंटिस्ट") ans = "डेंटल डॉक्टर रोज उपलब्ध हैं।";
+                    if (question == "लोकेशन") ans = "हर्ष हॉस्पिटल, मेन रोड सिटी सेंटर।";
+                    if (question == "संपर्क नंबर") ans = "📞 +91 9431046932";
+
+                }
+
+                addBot(ans);
+
+            }, 600);
+        }
+
+        /* Add Messages */
+        function addUser(text) {
+            chatBody.innerHTML += `<div class="msg user">${text}</div>`;
+            scrollBottom();
+        }
+
+        function addBot(text) {
+            chatBody.innerHTML += `<div class="msg bot">${text}</div>`;
+            scrollBottom();
+        }
+
+        function scrollBottom() {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        /* SCRIPT KE LAST ME YE ADD KARO */
+
+        function toggleTheme() {
+
+            document.body.classList.toggle("dark");
+
+            let btn = document.getElementById("themeBtn");
+
+            if (document.body.classList.contains("dark")) {
+                btn.innerText = "☀️";
+            } else {
+                btn.innerText = "🌙";
+            }
+
+        }
+    </script>
+
+</body>
+
+</html>
